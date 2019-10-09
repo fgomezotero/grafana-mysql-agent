@@ -27,6 +27,7 @@ node {
   }
   stage('Build Custom-Grafana'){
    sh 'oc start-build custom-grafana'
+   sleep(90)
    echo "Build Done!"
   }
   stage('Deploy Custom-Grafana'){

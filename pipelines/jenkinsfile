@@ -6,7 +6,7 @@ node {
     echo "Deploy mysql-client done!"
   }
   stage('Deploy DB-Agent'){
-    sleep(30)
+    sleep(60)
     sh "oc get pod | grep -i mysql-client | awk '{print \$1}' > podclient"
     def podmysqlclient = readFile('podclient').trim() 
     sh "oc cp mysql-agent/my2.sql $podmysqlclient:/var/lib/mysql/"

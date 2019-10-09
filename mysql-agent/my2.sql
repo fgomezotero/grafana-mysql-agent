@@ -10,7 +10,7 @@
 -- 0.0.11 2019-05-05 Small changes
 
 -- Create Database, Tables, Stored Routines and Jobs for My2 dashboard
-drop DATABASE IF EXISTS my2;
+drop database IF EXISTS my2;
 
 create database IF NOT EXISTS my2;
 use my2;
@@ -152,7 +152,7 @@ set sql_log_bin = 1;
 END //
 DELIMITER ; //
 
--- Collect daily statistics on space usage and delete old statistics (older than 31 days, 90 days for DB size)
+-- Collect daily statistics on space usage and delete old statistics (older than 31 days, 92 days for DB size)
 DROP PROCEDURE IF EXISTS collect_daily_stats;
 DELIMITER // ;
 CREATE PROCEDURE collect_daily_stats()
@@ -167,7 +167,7 @@ insert into my2.status(variable_name,variable_value,timest)
  select 'SIZEDB.TOTAL', sum(data_length+index_length), a
    from information_schema.tables;
 delete from my2.status where timest < date_sub(now(), INTERVAL 31 DAY) and variable_name <>'SIZEDB.TOTAL';
-delete from my2.status where timest < date_sub(now(), INTERVAL 90 DAY);
+delete from my2.status where timest < date_sub(now(), INTERVAL 92 DAY);
 set sql_log_bin = 1;
 END //
 DELIMITER ; //
@@ -178,7 +178,7 @@ set global event_scheduler=1;
 set sql_log_bin = 0;
 DROP EVENT IF EXISTS collect_stats;
 CREATE EVENT collect_stats
-    ON SCHEDULE EVERY 10 Minute
+    ON SCHEDULE EVERY 5 Minute
     DO call collect_stats();
 DROP EVENT IF EXISTS collect_daily_stats;
 CREATE EVENT collect_daily_stats

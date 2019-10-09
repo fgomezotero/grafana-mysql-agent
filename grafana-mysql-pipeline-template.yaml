@@ -111,7 +111,8 @@ objects:
     template:
       metadata:
         labels:
-          name: mysql-client
+          template: monitor-grafana-mysql-pipeline
+          app: ${APP_NAME}
       spec:
         containers:
           - env:
@@ -179,7 +180,8 @@ objects:
   metadata:
     name: custom-grafana
     labels:
-      app: grafana
+      template: monitor-grafana-mysql-pipeline
+      app: ${APP_NAME}
   spec:
     dockerImageRepository:
 
@@ -191,7 +193,8 @@ objects:
   kind: BuildConfig
   metadata:
     labels:
-      app: grafana
+      template: monitor-grafana-mysql-pipeline
+      app: ${APP_NAME}
     name: custom-grafana
   spec:
     output:

@@ -50,16 +50,6 @@ objects:
 # ##########################################################################################
 # Secrets & ConfigMaps
 # ##########################################################################################
-- apiVersion: v1
-  kind: Secret
-  metadata:
-    name: git-pipeline-auth-secret
-    labels:
-      template: monitor-grafana-mysql-pipeline
-      app: ${APP_NAME}
-  stringData:
-    username: ${GIT_URL_USERNAME}
-    password: ${GIT_URL_PASSWORD}
 
 - apiVersion: v1
   kind: Secret
@@ -89,8 +79,6 @@ objects:
       git:
         uri: ${GIT_URL}
         ref: ${GIT_RAMA}
-      sourceSecret:
-        name: git-pipeline-auth-secret
       contextDir: pipelines
     strategy:
       type: JenkinsPipeline

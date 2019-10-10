@@ -3,9 +3,11 @@ Author <franklin.gomez@agesic.gub.uy>
 version, 2019-10-08
 
 == Introducción
+
 Con el presente proyecto tenemos como objetivo disponibilizar con una herramienta de monitoreo de instancias de bases de datos MySQL en IaaS y PaaS. Para lograr dicho objetivo procedimos a la construcción de un Pipeline definido en un template que una vez ejecutado hace el despliegue de una instancia modificada de grafana(dashboard y datasource preconfigurados) para monitorear la instancia de MySQL suministrada como parámetos del Template.
 
 == Background
+
 Partiendo de la siguiente arquitectura de solución:
 
 image::grafana-mysql-agent.jpg[Arquitectura de solución]
@@ -22,10 +24,10 @@ Construimos un Template con los parámetros y objetos necesarios para ejecutar e
 . Deploy Custom-Grafana: Despliegue de la aplicación anteriormente construida y la exposición de la ruta en OCP
 
 == Consideraciones necesarias
+
 * Existencia de un proyecto con una solución MySQL desplegada,necesario conocer el nombre del servicio.
 * En caso que la instancia a monitorear no se encuentre en nuestro proyecto debemos conceder los permisos necesarios entre los proyectos de Openshift
 * En caso de que la instancia MySQL esté desplegada en IaaS asumimos que existe las configuraciones necesarias de firewall para poder acceder a la VM por el puerto configurado(3306 por defecto) desde Openshift
-
 
 == Despliegue
 
@@ -50,9 +52,25 @@ oc process jenkins-custom-template | oc create -f -
 ----
 
 Una vez completado el despliegue del jenkins debemos realizar el despliegue del pipeline grafana-mysql-agent
+[source,language,attributes]
+----
+oc create -f http://gitlab.paas.agesic.red.uy/franklin.gomez/grafana-mysql-agent/raw/master/grafana-mysql-pipeline-template.yaml
+----
 
+Seguidamente podemos ir a la interfaz UI de Openshift y buscar en el catálogo el Template recien creado (monitor-grafana-mysql-pipeline). Luego proporcionamos los parámetros que nos solicita para poder hacer el despliegue de la solución.
 
+Una vez instanciado el template anterior, podemos ir a través de la interfaz UI a Build->Pipelines y lanzar el comienzo del pipeline con el nombre definido en el parámetro APP_NAME del paso anterior.
+
+También podemos mandar a ejecutar el pipeline a través del CLI:
+[source,language,attributes]
+----
+oc start-build grafana-mysql-agent
+----
+
+Una vez completado los diferentes escenarios del pipeline podemos acceder a la aplicación Grafana a través de la ruta publicada.
 
 == Conclusiones
+
+
 
 == Recomendaciones

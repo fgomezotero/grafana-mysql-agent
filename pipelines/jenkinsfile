@@ -12,7 +12,7 @@ node {
     sh "oc cp mysql-agent/my2.sql $podmysqlclient:/var/lib/mysql/"
     sh "oc rsh $podmysqlclient /opt/rh/rh-mysql57/root/usr/bin/mysql --host=${env.MYSQL_HOST} --port=${env.MYSQL_PORT} --user=root --password=${env.MYSQL_ADMIN_PASSWORD} <<-EOF\n source /var/lib/mysql/my2.sql;\nEOF"
   }
-/*  stage('Test DB-Agent'){
+  stage('Test DB-Agent'){
     sh "oc get pod | grep -i mysql-client | awk '{print \$1}' > podclient"
     def podmysqlclient = readFile('podclient').trim()     
     withEnv(["USERNAME=my2","PASSWORD=my2grafanareader"]){
@@ -21,7 +21,9 @@ node {
   }
   stage('Delete mysql-client'){
     sh 'oc scale deploymentconfig mysql-client --replicas=0'
+    openshiftVerifyDeployment depCfg: 'mysql-client', replicaCount: '0', verbose: 'false', verifyReplicaCount: 'true', waitTime: '60', waitUnit: 'sec'
   }
+/*
   stage('Build Custom-Grafana'){
    sh 'oc start-build custom-grafana'
    sleep(30)

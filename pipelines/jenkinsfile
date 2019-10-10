@@ -6,6 +6,7 @@ node {
     openshiftVerifyDeployment depCfg: 'mysql-client', replicaCount: '1', verbose: 'false', verifyReplicaCount: 'true', waitTime: '300', waitUnit: 'sec'
   }
   stage('Deploy DB-Agent'){
+    openshiftVerifyDeployment depCfg: 'mysql-client', replicaCount: '1', verbose: 'false', verifyReplicaCount: 'true', waitTime: '300', waitUnit: 'sec'
     sh "oc get pod | grep -i mysql-client | awk '{print \$1}' > podclient"
     def podmysqlclient = readFile('podclient').trim() 
     sh "oc cp mysql-agent/my2.sql $podmysqlclient:/var/lib/mysql/"

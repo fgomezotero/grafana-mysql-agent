@@ -73,4 +73,3 @@ Una vez completado los diferentes escenarios del pipeline podemos acceder a la a
 
 . Buscar la forma de pasar por parámetro al template las distintas instancias que deseamos monitorear y quede fijo a una instancia.
 . Cambiar en el template la imagen de MySQL (docker-registry.default.svc:5000/develop-pot/mysql-57-rhel7) dado que está atada a una imagen disponible en el proyecto (develop-pot) por la imagen genérica (registry.access.redhat.com/rhscl/mysql-57-rhel7).
-. Mejorar el jenkinsfile para tener en cuenta esperar a pasar de stage hasta que los objetos creados en el propio stage estén corriendo. Ahora lo estamos resolviendo con espera (sleep).

@@ -4,7 +4,6 @@ node {
     sh 'oc rollout latest deploymentconfig/mysql-client'
     sh 'oc scale deploymentconfig mysql-client --replicas=1'
     sh 'oc delete deploymentconfig,services,routes -l app=grafana'
-    echo "Deploy mysql-client done!"
   }
   stage('Deploy DB-Agent'){
     sleep(60)
@@ -12,29 +11,24 @@ node {
     def podmysqlclient = readFile('podclient').trim() 
     sh "oc cp mysql-agent/my2.sql $podmysqlclient:/var/lib/mysql/"
     sh "oc rsh $podmysqlclient /opt/rh/rh-mysql57/root/usr/bin/mysql --host=${env.MYSQL_HOST} --port=${env.MYSQL_PORT} --user=root --password=${env.MYSQL_ADMIN_PASSWORD} <<-EOF\n source /var/lib/mysql/my2.sql;\nEOF"
-    echo "Deploy DB-Agent Done!"
   }
   stage('Test DB-Agent'){
     sh "oc get pod | grep -i mysql-client | awk '{print \$1}' > podclient"
     def podmysqlclient = readFile('podclient').trim()     
     withEnv(["USERNAME=my2","PASSWORD=my2grafanareader"]){
       sh "oc rsh $podmysqlclient /opt/rh/rh-mysql57/root/usr/bin/mysql --host=${env.MYSQL_HOST} --port=${env.MYSQL_PORT} --user=$USERNAME --password=$PASSWORD <<-EOF\n show databases;\nEOF"
-      echo "Test Done!"
     }
   }
   stage('Delete mysql-client'){
     sh 'oc scale deploymentconfig mysql-client --replicas=0'
-    echo "Scale Deployment mysql-client to 0 replica!"
   }
   stage('Build Custom-Grafana'){
    sh 'oc start-build custom-grafana'
-   echo "Build Done!"
    sleep(30)
   }
   stage('Deploy Custom-Grafana'){
    sh 'oc new-app custom-grafana -l app=grafana'
    sh 'oc expose svc/custom-grafana'
-   echo "Deploy Done!"
   }
 }
 

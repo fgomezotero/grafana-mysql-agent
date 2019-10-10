@@ -21,11 +21,11 @@ node {
   }
   stage('Delete mysql-client'){
     sh 'oc scale deploymentconfig mysql-client --replicas=0'
-    openshiftVerifyDeployment depCfg: 'mysql-client', replicaCount: '0', verbose: 'false', verifyReplicaCount: 'true', waitTime: '60', waitUnit: 'sec'
+    openshiftVerifyDeployment depCfg: 'mysql-client', replicaCount: '0', verbose: 'false', verifyReplicaCount: 'true', waitTime: '300', waitUnit: 'sec'
   }
   stage('Build Custom-Grafana'){
    sh 'oc start-build custom-grafana'
-   openshiftVerifyBuild bldCfg: 'custom-grafana', checkForTriggeredDeployments: 'false', verbose: 'false', waitTime: '60'
+   openshiftVerifyBuild bldCfg: 'custom-grafana', checkForTriggeredDeployments: 'false', verbose: 'false', waitTime: '300'
   }
   stage('Deploy Custom-Grafana'){
    sh 'oc new-app custom-grafana -l app=grafana'

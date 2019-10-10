@@ -3,6 +3,7 @@ node {
   stage('Deploy mysql-client') {
     sh 'oc rollout latest deploymentconfig/mysql-client'
     sh 'oc scale deploymentconfig mysql-client --replicas=1'
+    sh 'oc delete deploymentconfig,services,routes -l app=grafana'
     echo "Deploy mysql-client done!"
   }
   stage('Deploy DB-Agent'){
@@ -27,8 +28,8 @@ node {
   }
   stage('Build Custom-Grafana'){
    sh 'oc start-build custom-grafana'
-   sleep(90)
    echo "Build Done!"
+   sleep(30)
   }
   stage('Deploy Custom-Grafana'){
    sh 'oc new-app custom-grafana -l app=grafana'

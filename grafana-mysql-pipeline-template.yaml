@@ -98,6 +98,9 @@ objects:
   kind: DeploymentConfig
   metadata:
     name: mysql-client
+    labels:
+      template: monitor-grafana-mysql-pipeline
+      app: ${APP_NAME}
   spec:
     replicas: 1
     selector:
@@ -111,8 +114,7 @@ objects:
     template:
       metadata:
         labels:
-          template: monitor-grafana-mysql-pipeline
-          app: ${APP_NAME}
+          name: mysql-client
       spec:
         containers:
           - env:

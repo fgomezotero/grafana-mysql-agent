@@ -172,7 +172,8 @@ objects:
           - emptyDir: {}
             name: mysql-client-data
     test: false
-    triggers: []
+    triggers:
+      - type: ConfigChange
 
 ###########################################################################################
 # ImageStream
